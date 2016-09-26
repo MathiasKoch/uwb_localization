@@ -43,6 +43,7 @@
 #include "dma.h"
 #include "gpio.h"
 #include "log.h"
+#include "led.h"
 #include "usb_device.h"
 #include "decawave.h"
 #include "deca_device_api.h"
@@ -110,6 +111,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_LED_Init();
   MX_DMA_Init();
   MX_TIM1_Init();
   MX_USB_DEVICE_Init();
@@ -119,6 +121,8 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_Delay(2000);
+
+  LED_On(LED_1);
 
   int boardId = 0;
 

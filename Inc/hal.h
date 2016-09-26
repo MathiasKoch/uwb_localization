@@ -46,16 +46,6 @@
   #include "stm32f3xx_hal.h"
   #include "stm32f3xx.h"
 
-
-  /* USB pin defines */
-  #define USB_PORT (GPIOA)
-  #define USBDM_PIN (GPIO_PIN_11)
-  #define USBDP_PIN (GPIO_PIN_12)
-  #define USB_AF (GPIO_AF14_USB)
-  #define USB_EXTI (USB_LP_CAN_RX0_IRQn)
-
-
-
   /* Decawave pin defines */
   #define DECA_SPI_INSTANCE (SPI1)
 
@@ -69,30 +59,39 @@
   #define DECA_RESET_PORT (GPIOA)
   #define DECA_RESET_PIN (GPIO_PIN_8)
 
-
-
   /* Userbutton pin defines */
-  #define USERBUTTON_PORT (GPIOA)
-  #define USERBUTTON_PIN (GPIO_PIN_1)
-  #define USERBUTTON_EXTI (EXTI1_IRQn)
-
-
+  #define USER_BUTTON_PORT (GPIOA)
+  #define USER_BUTTON_PIN (GPIO_PIN_1)
+  #define USER_BUTTON_EXTI (EXTI1_IRQn)
 
   /* Enable client SPI (SPI2) */
   #define CLIENT_SPI_INSTANCE (SPI2)
 
-
-
-  /* IMU pin defines */
+  /* IMU/PRESSURE pin defines */                                                      //------------------ These might still be wrong!
   #define IMU_I2C_INSTANCE (I2C1)
 
   #define IMU_IRQ_PORT ()
   #define IMU_IRQ_PIN ()
   #define IMU_IRQ_EXTI ()
 
+  /* LED pin defines */                                                      //------------------ These might still be wrong!
+  #define LED_1_PORT (GPIOC)
+  #define LED_1_PIN (GPIO_PIN_13)
+  #define LED_2_PORT (GPIOC)
+  #define LED_2_PIN (GPIO_PIN_14)
 
+  /*
+  * Everything below here is processor specific defines, and should as such
+  * NOT need to be edited! They are specific for the individual processor type,
+  * and not implementation specific.
+  */
 
-
+  /* USB pin defines */
+  #define USB_PORT (GPIOA)
+  #define USBDM_PIN (GPIO_PIN_11)
+  #define USBDP_PIN (GPIO_PIN_12)
+  #define USB_AF (GPIO_AF14_USB)
+  #define USB_EXTI (USB_LP_CAN_RX0_IRQn)
 
   /* SPI pin defines */
   #define SPI1_PORT (GPIOA)
@@ -110,14 +109,11 @@
   #define DMA1_CHAN2_EXTI (DMA1_Channel2_IRQn)
   #define DMA1_CHAN3_EXTI (DMA1_Channel3_IRQn)
 
-
   /* I2C pin defines */
   #define I2C1_PORT (GPIOB)
   #define I2C1_SCL_PIN (GPIO_PIN_6)
   #define I2C1_SDA_PIN (GPIO_PIN_7)
   #define I2C1_AF (GPIO_AF4_I2C1)
-
-
 
   /*
   * The STM32 factory-programmed UUID memory.
@@ -126,8 +122,9 @@
   */
   #define STM32_UUID ((uint32_t *)0x1FFFF7AC)
 
-
-
+  /* DFU Bootloader defines */                                                      //------------------ These might still be wrong!
+  #define SYSMEM_RESET_VECTOR (0x1fffC804)
+  #define BOOTLOADER_STACK_POINTER (0x20002250)
 
 
 
@@ -156,12 +153,6 @@
   #include "stm32f0xx_hal.h"
   #include "stm32f0xx.h"
 
-
-  /* USB pin defines */
-  #define USB_AF (GPIO_AF14_USB)
-  #define USB_EXTI (USB_IRQn)
-
-
   /* Decawave pin defines */
   #define DECA_SPI_INSTANCE (SPI1)
 
@@ -175,21 +166,35 @@
   #define DECA_RESET_PORT (GPIOB)
   #define DECA_RESET_PIN (GPIO_PIN_12)
 
-
-
   /* Userbutton pin defines */
-  #define USERBUTTON_PORT (GPIOA)
-  #define USERBUTTON_PIN (GPIO_PIN_1)
-  #define USERBUTTON_EXTI (EXTI0_1_IRQn)
+  #define USER_BUTTON_PORT (GPIOA)
+  #define USER_BUTTON_PIN (GPIO_PIN_1)
+  #define USER_BUTTON_EXTI (EXTI0_1_IRQn)
 
-
-  /* IMU/PRES pin defines */
+  /* IMU/PRESSURE pin defines */                                                      //------------------ These might still be wrong!
   #define IMU_I2C_INSTANCE (I2C1)
 
   #define IMU_IRQ_PORT ()
   #define IMU_IRQ_PIN ()
   #define IMU_IRQ_EXTI ()
 
+  /* LED pin defines */                                                      //------------------ These might still be wrong!
+  #define LED_1_PORT (GPIOC)
+  #define LED_1_PIN (GPIO_PIN_13)
+  #define LED_2_PORT (GPIOC)
+  #define LED_2_PIN (GPIO_PIN_14)
+  #define LED_CHARGING_PORT (GPIOC)
+  #define LED_CHARGING_PIN (GPIO_PIN_14)
+
+  /*
+  * Everything below here is processor specific defines, and should as such
+  * NOT need to be edited! They are specific for the individual processor type,
+  * and not implementation specific.
+  */
+
+  /* USB pin defines */
+  #define USB_AF (GPIO_AF14_USB)
+  #define USB_EXTI (USB_IRQn)
 
   /* SPI pin defines */
   #define SPI1_PORT (GPIOA)
@@ -206,13 +211,16 @@
   #define I2C1_SDA_PIN (GPIO_PIN_7)
   #define I2C1_AF (GPIO_AF1_I2C1)
   
-
   /*
   * The STM32 factory-programmed UUID memory.
   * Three values of 32 bits each starting at this address
   * Use like this: STM32_UUID[0], STM32_UUID[1], STM32_UUID[2]
   */
   #define STM32_UUID ((uint32_t *)0x1FFFF7AC)
+
+  /* DFU Bootloader defines */
+  #define SYSMEM_RESET_VECTOR (0x1fffC804)
+  #define BOOTLOADER_STACK_POINTER (0x20002250)
 
 
 

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : error.c
-  * Description        : This file provides code for the configuration
-  *                      of the error handler.
+  * File Name          : dfu.c
+  * Description        : This file provides code for jumping to the
+                         built-in DFU bootloader.
   ******************************************************************************
   *
   * COPYRIGHT(c) 2016 STMicroelectronics
@@ -31,52 +31,38 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
-#include "error.h"
+#include "dfu.h"
 
-/* USER CODE BEGIN 0 */
+#define RESET_TO_BOOTLOADER_MAGIC_CODE 0xDEADBEEF
 
-/* USER CODE END 0 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler */
-  /* User can add his own implementation to report the HAL error return state */
-  while(1) 
-  {
-  }
-  /* USER CODE END Error_Handler */ 
-}
-
-#ifdef USE_FULL_ASSERT
-
-/**
-   * @brief Reports the name of the source file and the source line number
-   * where the assert_param error has occurred.
-   * @param file: pointer to the source file name
-   * @param line: assert_param error line source number
-   * @retval None
-   */
-void assert_failed(uint8_t* file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-
-}
-
-#endif
 
 /* USER CODE BEGIN 1 */
-
+uint32_t dfu_reset_to_bootloader_magic;
 /* USER CODE END 1 */
+
+void __initialize_hardware_early(void)
+{
+    if (dfu_reset_to_bootloader_magic == RESET_TO_BOOTLOADER_MAGIC_CODE) {
+        void (*bootloader)(void) = (void (*)(void)) (*((uint32_t *) SYSMEM_RESET_VECTOR));
+        dfu_reset_to_bootloader_magic = 0;
+        __set_MSP(BOOTLOADER_STACK_POINTER);
+        bootloader();
+        while (42);
+    } else {
+        SystemInit();
+    }
+}
+
+void dfu_run_bootloader()
+{
+    dfu_reset_to_bootloader_magic = RESET_TO_BOOTLOADER_MAGIC_CODE;
+    NVIC_SystemReset();
+}
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 /**
   * @}

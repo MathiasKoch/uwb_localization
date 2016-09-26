@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : gpio.h
+  * File Name          : led.h
   * Description        : This file contains all the functions prototypes for 
-  *                      the gpio  
+  *                      the led  
   ******************************************************************************
   *
   * COPYRIGHT(c) 2016 STMicroelectronics
@@ -33,8 +33,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __gpio_H
-#define __gpio_H
+#ifndef __led_H
+#define __led_H
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -48,9 +48,24 @@
 
 /* USER CODE BEGIN Private defines */
 
+
+typedef enum
+{
+    LED_1,
+    LED_2,
+    LED_CHARGING,
+    LED_ALL
+} led_t;
+
 /* USER CODE END Private defines */
 
-void MX_GPIO_Init(void);
+void MX_LED_Init(void);
+
+void LED_Set(led_t led, GPIO_PinState state);
+void LED_On(led_t led);
+void LED_Off(led_t led);
+void LED_Toggle(led_t led);
+GPIO_PinState LED_Get(led_t led);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -59,7 +74,7 @@ void MX_GPIO_Init(void);
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ gpio_H */
+#endif /*__ led_H */
 
 /**
   * @}

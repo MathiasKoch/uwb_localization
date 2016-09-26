@@ -165,6 +165,8 @@ CPPSRC 		+= Src/device.cpp
 CPPSRC 		+= Src/ranging.cpp
 CPPSRC 		+= Src/mac.cpp
 SRC			+= Src/log.c
+SRC			+= Src/dfu.c
+SRC			+= Src/led.c
 SRC			+= Src/$(CPU)/sys.c
 SRC			+= Src/$(CPU)/rng.c
 

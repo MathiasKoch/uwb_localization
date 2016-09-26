@@ -12,10 +12,9 @@
  */
 
 #include "decawave.h"
-#include "log.h"
 
 
-SPI_HandleTypeDef hspi1;
+SPI_HandleTypeDef deca_spi;
 
 
 void deca_sleep(unsigned int time_ms)
@@ -33,12 +32,12 @@ int readfromspi (uint16_t headerLength,
 
 	HAL_GPIO_WritePin(DECA_CS_PORT, DECA_CS_PIN, GPIO_PIN_RESET);
 
-	if(HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)headerBuffer, headerLength) != HAL_OK){
+	if(HAL_SPI_Transmit_DMA(&deca_spi, (uint8_t*)headerBuffer, headerLength) != HAL_OK){
 		goto error;
 	}
 
 
-	if(HAL_SPI_Receive_DMA(&hspi1, (uint8_t*)readBuffer, readlength) != HAL_OK){
+	if(HAL_SPI_Receive_DMA(&deca_spi, (uint8_t*)readBuffer, readlength) != HAL_OK){
 		goto error;
 	}
 
@@ -59,12 +58,12 @@ int writetospi (uint16_t headerLength,
 
 	HAL_GPIO_WritePin(DECA_CS_PORT, DECA_CS_PIN, GPIO_PIN_RESET);
 	
-	if(HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)headerBuffer, headerLength) != HAL_OK){
+	if(HAL_SPI_Transmit_DMA(&deca_spi, (uint8_t*)headerBuffer, headerLength) != HAL_OK){
 		goto error;
 	}
 	
 
-	if(HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)bodyBuffer, bodylength) != HAL_OK){
+	if(HAL_SPI_Transmit_DMA(&deca_spi, (uint8_t*)bodyBuffer, bodylength) != HAL_OK){
 		goto error;
 	}
 
@@ -116,10 +115,10 @@ error:
  */
 decaIrqStatus_t decamutexon(void)           
 {
-	decaIrqStatus_t s = 0;//port_GetEXT_IRQStatus();
+	decaIrqStatus_t s = 1;//HAL_NVIC_GetActive(DECA_IRQ_EXTI);
 
 	if(s) {
-		//port_DisableEXT_IRQ(); //disable the external interrupt line
+		//HAL_NVIC_DisableIRQ(DECA_IRQ_EXTI); //disable the external interrupt line
 	}
 	return s ;   // return state before disable, value is used to re-enable in decamutexoff call
 }
@@ -142,13 +141,13 @@ decaIrqStatus_t decamutexon(void)
 void decamutexoff(decaIrqStatus_t s)        // put a function here that re-enables the interrupt at the end of the critical section
 {
 	if(s) { //need to check the port state as we can't use level sensitive interrupt on the STM ARM
-		//port_EnableEXT_IRQ();
+		//HAL_NVIC_EnableIRQ(DECA_IRQ_EXTI);
 	}
 }
 
 
 void reset_DW1000(void){
-	GPIO_InitTypeDef GPIO_InitStruct;
+	/*GPIO_InitTypeDef GPIO_InitStruct;
 
 	// Enable GPIO used for DW1000 reset
 	GPIO_InitStruct.Pin = DECA_RESET_PIN;
@@ -165,5 +164,5 @@ void reset_DW1000(void){
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(DECA_RESET_PORT, &GPIO_InitStruct);
 
-    deca_sleep(2);
+    deca_sleep(2);*/
 }

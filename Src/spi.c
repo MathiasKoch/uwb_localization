@@ -50,6 +50,25 @@ DMA_HandleTypeDef hdma_deca_spi_tx;
 /* DECAWAVE SPI init function */
 void MX_DECA_SPI_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+
+  /*Configure GPIO pins : DECA_RESET */
+  GPIO_InitStruct.Pin = DECA_RESET_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DECA_RESET_PORT, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : DECA_IRQ */
+  GPIO_InitStruct.Pin = DECA_IRQ_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DECA_IRQ_PORT, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(DECA_IRQ_EXTI, 0, 0);
+  HAL_NVIC_EnableIRQ(DECA_IRQ_EXTI);
+
 
   deca_spi.Instance = DECA_SPI_INSTANCE;
   deca_spi.Init.Mode = SPI_MODE_MASTER;
@@ -69,7 +88,6 @@ void MX_DECA_SPI_Init(void)
   {
     Error_Handler();
   }
-
 }
 /* CLIENT SPI init function */
 void MX_CLIENT_SPI_Init(void)
@@ -116,6 +134,16 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = SPI1_AF;
     HAL_GPIO_Init(SPI1_PORT, &GPIO_InitStruct);
+
+    /*Configure GPIO pin : SPI1_CS */
+    GPIO_InitStruct.Pin = DECA_CS_PIN;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(DECA_CS_PORT, &GPIO_InitStruct);
+
+    /*Configure GPIO pin Output Level - Decawave SPI Chip select */
+    HAL_GPIO_WritePin(DECA_CS_PORT, DECA_CS_PIN, GPIO_PIN_RESET);
 
     /* Peripheral DMA init*/
   

@@ -100,14 +100,11 @@ int _MLPrintLog (int priority, const char* tag, const char* fmt, ...){
     out[2] = priority;
     out[88] = '\r';
     out[89] = '\n';
-    for (ii = 0; ii < length; ii += (PACKET_LENGTH-5)) {
-        
+    for (ii = 0; ii < length; ii += (PACKET_LENGTH-5)) 
+    {
         this_length = (length-ii < PACKET_LENGTH-5)? length-ii : PACKET_LENGTH-5;
         memset(out+3, 0, 18);
         memcpy(out+3, buf+ii, this_length);
-        /*for (i=0; i<PACKET_LENGTH; i++) {
-          USART_putc(out[i]);
-        }*/
         CDC_Transmit_FS(out, PACKET_LENGTH);
     }
     
