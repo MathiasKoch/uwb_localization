@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 #include "hal.h"
+#include "gpio.h"
 #include "deca_device_api.h"
 
 

@@ -115,10 +115,10 @@ error:
  */
 decaIrqStatus_t decamutexon(void)           
 {
-	decaIrqStatus_t s = 1;//HAL_NVIC_GetActive(DECA_IRQ_EXTI);
+	decaIrqStatus_t s = EXTI_GetITEnStatus(DECA_IRQ_EXTI);
 
 	if(s) {
-		//HAL_NVIC_DisableIRQ(DECA_IRQ_EXTI); //disable the external interrupt line
+		HAL_NVIC_DisableIRQ(DECA_IRQ_EXTI); //disable the external interrupt line
 	}
 	return s ;   // return state before disable, value is used to re-enable in decamutexoff call
 }
@@ -141,13 +141,13 @@ decaIrqStatus_t decamutexon(void)
 void decamutexoff(decaIrqStatus_t s)        // put a function here that re-enables the interrupt at the end of the critical section
 {
 	if(s) { //need to check the port state as we can't use level sensitive interrupt on the STM ARM
-		//HAL_NVIC_EnableIRQ(DECA_IRQ_EXTI);
+		HAL_NVIC_EnableIRQ(DECA_IRQ_EXTI);
 	}
 }
 
 
 void reset_DW1000(void){
-	/*GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitTypeDef GPIO_InitStruct;
 
 	// Enable GPIO used for DW1000 reset
 	GPIO_InitStruct.Pin = DECA_RESET_PIN;
@@ -164,5 +164,5 @@ void reset_DW1000(void){
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(DECA_RESET_PORT, &GPIO_InitStruct);
 
-    deca_sleep(2);*/
+    deca_sleep(2);
 }

@@ -51,6 +51,7 @@
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);
+ITStatus EXTI_GetITEnStatus(uint32_t EXTI_Line);
 
 /* USER CODE BEGIN Prototypes */
 

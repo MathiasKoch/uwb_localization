@@ -64,19 +64,19 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOF_CLK_ENABLE();
 
   /*Configure GPIO pins : PA All pins */
-  /*GPIO_InitStruct.Pin = GPIO_PIN_All;
+  GPIO_InitStruct.Pin = GPIO_PIN_All;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB All pins */
- /* GPIO_InitStruct.Pin = GPIO_PIN_All;
+  GPIO_InitStruct.Pin = GPIO_PIN_All;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PC All pins */
-  /*GPIO_InitStruct.Pin = GPIO_PIN_All;
+  GPIO_InitStruct.Pin = GPIO_PIN_All;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -92,7 +92,11 @@ void MX_GPIO_Init(void)
   if(HAL_GPIO_ReadPin(USER_BUTTON_PORT, USER_BUTTON_PIN) == GPIO_PIN_SET)
   {
     // JUMP DFU
-    dfu_run_bootloader();
+    while(1){
+      MPL_LOGD("SHOULD JUMP DFU!");
+      HAL_Delay(2999);
+    }
+    //dfu_run_bootloader();
   }
 
   HAL_NVIC_SetPriority(USER_BUTTON_EXTI, 0, 0);
@@ -100,15 +104,42 @@ void MX_GPIO_Init(void)
 
 }
 
+/**
+  * @brief  Checks whether the specified EXTI line is enabled or not.
+  * @param  EXTI_Line: specifies the EXTI line to check.
+  *   This parameter can be:
+  *     @arg EXTI_Linex: External interrupt line x where x(0..19)
+  * @retval The "enable" state of EXTI_Line (SET or RESET).
+  */
+ITStatus EXTI_GetITEnStatus(uint32_t EXTI_Line)
+{
+  ITStatus bitstatus = RESET;
+  uint32_t enablestatus = 0;
+  /* Check the parameters */
+  assert_param(IS_GET_EXTI_LINE(EXTI_Line));
+
+  enablestatus =  EXTI->IMR & EXTI_Line;
+  if (enablestatus != (uint32_t)RESET)
+  {
+    bitstatus = SET;
+  }
+  else
+  {
+    bitstatus = RESET;
+  }
+  return bitstatus;
+}
+
 /* USER CODE BEGIN 2 */
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
+  if(GPIO_Pin == USER_BUTTON_PIN){
+    MPL_LOGD("Button pressed!");
+  }
   if(GPIO_Pin == DECA_IRQ_PIN){
     dwt_isr();
-  }else if(GPIO_Pin == USER_BUTTON_PIN){
-    MPL_LOGD("Button pressed!");
   }
 
 }
